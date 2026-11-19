@@ -43,6 +43,12 @@ export const summaryConfig = registerAs('summary', () => ({
   dailyLimit: Number(process.env.SUMMARY_DAILY_LIMIT ?? 300),
 }));
 
+export const telegramConfig = registerAs('telegram', () => ({
+  botToken: process.env.TELEGRAM_BOT_TOKEN,
+  channelId: process.env.TELEGRAM_CHANNEL_ID,
+  dailyLimit: Number(process.env.TELEGRAM_DAILY_LIMIT ?? 25),
+}));
+
 export const ingestionConfig = registerAs('ingestion', () => ({
   enabled: process.env.INGESTION_ENABLED !== 'false',
 }));

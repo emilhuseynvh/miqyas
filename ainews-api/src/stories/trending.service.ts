@@ -17,6 +17,8 @@ export type TrendingOptions = {
   limit: number;
   categoryId?: number;
   unsummarizedOnly?: boolean;
+  summarizedOnly?: boolean;
+  maxAgeHours?: number;
   diverse?: boolean;
 };
 
@@ -32,6 +34,11 @@ export class TrendingService {
       filters.push(`AND p.category_id = $${params.length}`);
     }
     if (options.unsummarizedOnly) filters.push('AND s.summary IS NULL AND s.summary_attempts < 3');
+    if (options.summarizedOnly) filters.push('AND s.summary IS NOT NULL');
+    if (options.maxAgeHours !== undefined) {
+      params.push(options.maxAgeHours);
+      filters.push(`AND s.first_published_at > now() - make_interval(hours => $${params.length})`);
+    }
 
     const rows: TrendingRow[] = await this.dataSource.query(
       `WITH recent AS (

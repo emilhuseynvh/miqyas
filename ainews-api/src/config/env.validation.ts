@@ -105,6 +105,18 @@ class EnvironmentVariables {
   @Min(0)
   SUMMARY_DAILY_LIMIT: number = 300;
 
+  @IsString()
+  @IsOptional()
+  TELEGRAM_BOT_TOKEN?: string;
+
+  @IsString()
+  @IsOptional()
+  TELEGRAM_CHANNEL_ID?: string;
+
+  @IsInt()
+  @Min(0)
+  TELEGRAM_DAILY_LIMIT: number = 25;
+
   @Transform(({ value }) => value !== false && value !== 'false')
   @IsBoolean()
   INGESTION_ENABLED: boolean = true;

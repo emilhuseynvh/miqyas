@@ -33,6 +33,7 @@ Lent keşi, toplama vəziyyəti və sorğu limitləri hər prosesin yaddaşında
 - Frontend-də `SITE_URL=https://miqyas.site` **build zamanı** da verilməlidir: `robots.txt`, `sitemap.xml`, `rss.xml`, `llms.txt` statik generasiya olunur və domeni build vaxtı götürür. `.env.local`-dakı `localhost` dəyəri prod build-ə düşməməlidir.
 - SEO üçün əlavə env: `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION` (Search Console / Bing Webmaster-dən alınan kod).
 - AI xülasə: `GEMINI_API_KEY`, `GEMINI_MODEL` (default `gemini-3.5-flash-lite`), `SUMMARY_DAILY_LIMIT` (default 300). Xülasə gündəmdəki hadisələrə (3+ mənbə, gündəm balına görə) yazılır. Xülasələri yalnız `INGESTION_ENABLED=true` olan proses yazır.
+- Telegram kanalı: `TELEGRAM_BOT_TOKEN` (@BotFather-dən), `TELEGRAM_CHANNEL_ID` (`@kanal_adi` və ya `-100...`), `TELEGRAM_DAILY_LIMIT` (default 25). Bot kanalda admin olmalıdır və "Post messages" icazəsi verilməlidir. Bot gündəmdən AI xülasəli hadisələri paylaşır: ən azı 20 dəqiqə aralıqla, gecə 00:00-07:00 yalnız "Son dəqiqə" xəbərləri; səhər 08:00-da günün əsas xəbərləri icmalı. Hər iki iş yalnız `INGESTION_ENABLED=true` olan prosesdə işləyir.
 - `JWT_SECRET`, `MAGIC_LINK_SECRET`, `INTERNAL_API_TOKEN` yenidən yaradılmalıdır: `openssl rand -hex 32`. `INTERNAL_API_TOKEN` hər iki tərəfdə eyni olmalıdır.
 - Development zamanı söhbətdə açıq yazılmış Gmail app password, Gemini key və admin şifrəsi yenisi ilə əvəz olunmalıdır. Admin şifrəsi: `ADMIN_PASSWORD='...' npm run admin:create -- --email ...`.
 

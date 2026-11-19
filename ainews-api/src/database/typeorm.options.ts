@@ -23,6 +23,7 @@ import { AddNewsletter1794990900000 } from './migrations/1794990900000-add-newsl
 import { AddStories1794991000000 } from './migrations/1794991000000-add-stories.js';
 import { AddStorySummaries1794991100000 } from './migrations/1794991100000-add-story-summaries.js';
 import { AddArticleJunkFlag1794991200000 } from './migrations/1794991200000-add-article-junk-flag.js';
+import { CreateTelegramPosts1794991300000 } from './migrations/1794991300000-create-telegram-posts.js';
 
 type ConnectionSettings = {
   host: string;
@@ -62,6 +63,7 @@ export const buildTypeOrmOptions = (settings: ConnectionSettings): DataSourceOpt
     AddStories1794991000000,
     AddStorySummaries1794991100000,
     AddArticleJunkFlag1794991200000,
+    CreateTelegramPosts1794991300000,
   ],
   migrationsTableName: 'migrations',
   synchronize: false,

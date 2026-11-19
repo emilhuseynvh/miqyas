@@ -15,6 +15,7 @@ import {
   ingestionConfig,
   mailConfig,
   summaryConfig,
+  telegramConfig,
 } from './config/configuration.js';
 import { validateEnv } from './config/env.validation.js';
 import { DatabaseModule } from './database/database.module.js';
@@ -23,6 +24,7 @@ import { IngestionModule } from './ingestion/ingestion.module.js';
 import { NewsletterModule } from './newsletter/newsletter.module.js';
 import { RecommendationsModule } from './recommendations/recommendations.module.js';
 import { SummariesModule } from './summaries/summaries.module.js';
+import { TelegramModule } from './telegram/telegram.module.js';
 import { SourcesModule } from './sources/sources.module.js';
 import { UsersModule } from './users/users.module.js';
 
@@ -31,7 +33,7 @@ import { UsersModule } from './users/users.module.js';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [appConfig, databaseConfig, authConfig, mailConfig, ingestionConfig, summaryConfig],
+      load: [appConfig, databaseConfig, authConfig, mailConfig, ingestionConfig, summaryConfig, telegramConfig],
       validate: validateEnv,
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
@@ -48,6 +50,7 @@ import { UsersModule } from './users/users.module.js';
     RecommendationsModule,
     NewsletterModule,
     SummariesModule,
+    TelegramModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ClientThrottlerGuard }],
 })
