@@ -9,6 +9,7 @@ import { digestMessage, storyMessage } from './telegram.format.js';
 const TIME_ZONE = 'Asia/Baku';
 const QUIET_UNTIL_HOUR = 7;
 const MIN_GAP_MINUTES = 20;
+const BREAKING_GAP_MINUTES = 10;
 const STORY_MAX_AGE_HOURS = 12;
 const DIGEST_SIZE = 7;
 const DIGEST_FIRST_HOUR = 8;
@@ -61,7 +62,9 @@ export class TelegramService implements OnApplicationBootstrap {
       if (!next) return;
 
       const quiet = bakuNow().hour < QUIET_UNTIL_HOUR;
-      if (!next.breaking && (quiet || (await this.minutesSinceLastPost()) < MIN_GAP_MINUTES)) return;
+      if (!next.breaking && quiet) return;
+      const gap = next.breaking ? BREAKING_GAP_MINUTES : MIN_GAP_MINUTES;
+      if ((await this.minutesSinceLastPost()) < gap) return;
 
       const story = await this.storyDetails(next.storyId);
       if (!story) return;

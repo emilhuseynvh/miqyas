@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { summaryConfig } from '../config/configuration.js';
+import { StoriesService } from '../stories/stories.service.js';
 import { TrendingService } from '../stories/trending.service.js';
 import { GeminiClient, GeminiRateLimitError } from './gemini.client.js';
 import {
@@ -28,6 +29,7 @@ export class SummariesService {
     private readonly dataSource: DataSource,
     private readonly gemini: GeminiClient,
     private readonly trending: TrendingService,
+    private readonly stories: StoriesService,
     @Inject(summaryConfig.KEY) private readonly config: ConfigType<typeof summaryConfig>,
   ) {}
 
@@ -45,6 +47,7 @@ export class SummariesService {
         if (result === 'done') done++;
       }
       if (done > 0) this.logger.log(`Summarized ${done} stories`);
+      await this.stories.mergeDuplicateSummaries();
       return done;
     } finally {
       this.running = false;
