@@ -4,6 +4,7 @@ export const site = {
   contactEmail: process.env.CONTACT_EMAIL ?? "info@miqyas.site",
   // Rəsmi profillər (Facebook, Telegram, Instagram, LinkedIn...) vergüllə: Organization schema-da sameAs olur.
   telegramUrl: "https://t.me/miqyas_xeber",
+  clarityId: "zg3njpvrlp",
   socialLinks: (process.env.SOCIAL_LINKS ?? "https://t.me/miqyas_xeber").split(",").map((s) => s.trim()).filter(Boolean),
   tagline: "Xəbərin özü, konteksti və fərqli baxışlar",
   homeTitle: "Miqyas — Son xəbərlər, kontekst və fərqli baxışlar",

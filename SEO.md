@@ -40,7 +40,7 @@ Bunları kod edə bilməz, sizin hesabınızla edilməlidir:
 2. **Bing Webmaster Tools** — eyni qayda ilə, `BING_SITE_VERIFICATION`. Bing həm də ChatGPT axtarışının mənbəyidir.
 3. **SITE_URL build zamanı** — `SITE_URL=https://miqyas.site npm run build`. Əks halda robots/sitemap/rss/llms içində `localhost` qalır (DEPLOY.md-də qeyd olunub).
 4. **Google News Publisher Center** — hazırda tövsiyə olunmur: Google News aqreqator saytları (başqasının mətnini təkrarlayan) qəbul etmir. Öz redaksiya məzmunu yarandıqdan sonra müraciət edin.
-5. **Analitika (GA4)** — əlavə edilməyib. Məxfilik səhifəsində "üçüncü tərəf izləmə cookie-si yoxdur" yazılıb; GA4 əlavə etmək bu vədi pozar və cookie banner tələb edər. Alternativ: Search Console (cookie-siz) + öz baxış sayğacımız (artıq var). Lazım olsa cookie-siz analitika (Plausible / Umami self-host) tövsiyə olunur.
+5. **Analitika** — Microsoft Clarity qoşulub (bütün sayt səhifələrində, admin paneldən başqa). Məxfilik səhifəsində Clarity və onun cookie-ləri (_clck, _clsk) açıqlanıb. GA4 əlavə edilməyib.
 6. **Əlaqə e-poçtu** — `/elaqe` və schema-da hələ `info@example.az` placeholder-dir; real ünvanla əvəz edin.
 
 ## 4. Edilməyənlər və səbəbi

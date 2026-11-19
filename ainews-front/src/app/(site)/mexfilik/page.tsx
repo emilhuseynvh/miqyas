@@ -34,6 +34,17 @@ export default function PrivacyPage() {
         Hesaba daxil olmamısınızsa, yalnız xəbərin ümumi baxış sayı artır. Kimin baxdığı qeyd olunmur.
       </p>
 
+      <h2 id="analitika">Saytdan istifadə statistikası</h2>
+      <p>
+        Saytı yaxşılaşdırmaq üçün Microsoft Clarity xidmətindən istifadə edirik. Clarity səhifələrə baxışları, klikləri,
+        səhifənin nə qədər aşağı sürüşdürüldüyünü, cihaz və brauzer növünü qeyd edir. Səhifədəki davranışın anonim
+        təkrarını göstərən sessiya yazıları da yaradır. Formlara yazdığınız mətnlər (məsələn e-poçt) bu yazılarda gizlədilir.
+      </p>
+      <p>
+        Bu məlumatlar Microsoft-un serverlərində saxlanılır və reklam üçün istifadə olunmur. Ətraflı:{" "}
+        <a href="https://privacy.microsoft.com/privacystatement">Microsoft məxfilik bəyanatı</a>.
+      </p>
+
       <h2>Məlumatlarınızı idarə etmək</h2>
       <ul>
         <li>Oxu tarixçənizi &quot;Oxuduqlarım&quot; səhifəsindən istənilən vaxt silə bilərsiniz.</li>
@@ -43,12 +54,21 @@ export default function PrivacyPage() {
       </ul>
 
       <h2 id="cookie">Cookie faylları</h2>
-      <p>Yalnız zəruri cookie-lər istifadə olunur:</p>
+      <p>Zəruri cookie-lər:</p>
       <ul>
         <li>giriş sessiyası (30 gün);</li>
         <li>giriş linki göndərilən e-poçtu yadda saxlamaq üçün müvəqqəti cookie (15 dəqiqə).</li>
       </ul>
-      <p>Reklam və üçüncü tərəf izləmə cookie-ləri istifadə olunmur.</p>
+      <p>Statistika cookie-ləri (Microsoft Clarity):</p>
+      <ul>
+        <li>
+          <code>_clck</code>: təkrar gəlişləri eyni anonim istifadəçiyə aid etmək üçün (1 il);
+        </li>
+        <li>
+          <code>_clsk</code>: bir sessiya ərzindəki baxışları birləşdirmək üçün (1 gün).
+        </li>
+      </ul>
+      <p>Reklam cookie-ləri istifadə olunmur. Statistika cookie-lərini brauzerinizin ayarlarından silə və ya bloklaya bilərsiniz.</p>
     </StaticPage>
   );
 }
