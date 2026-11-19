@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import Parser from 'rss-parser';
+import { blockReason } from './fetch-policy.js';
 
 export type FeedEntry = {
   title: string;
@@ -86,8 +87,10 @@ export class FeedReaderService {
       throw new FeedError(`Request failed: ${reason}`);
     });
 
-    if (!response.ok) throw new FeedError(`HTTP ${response.status}`);
     const body = await response.text();
+    const blocked = blockReason(response.status, body, response.headers);
+    if (blocked) throw new FeedError(blocked);
+    if (!response.ok) throw new FeedError(`HTTP ${response.status}`);
     if (!/<(rss|feed|rdf:RDF)[\s>]/i.test(body))
       throw new FeedError('Response is not an RSS or Atom feed');
     return body;

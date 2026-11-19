@@ -11,6 +11,7 @@ import type { Source } from '../sources/entities/source.entity.js';
 import { SourcesService } from '../sources/sources.service.js';
 import { StoriesService } from '../stories/stories.service.js';
 import { type FeedEntry, FeedReaderService } from './feed-reader.service.js';
+import { isDue } from './fetch-policy.js';
 
 const CONCURRENCY = 8;
 const ENRICH_CONCURRENCY = 4;
@@ -145,7 +146,7 @@ export class IngestionService {
 
   private async execute(): Promise<IngestionRun> {
     const startedAt = new Date();
-    const queue = await this.sources.findFetchable();
+    const queue = (await this.sources.findFetchable()).filter((source) => isDue(source, startedAt));
     const results: SourceFetchResult[] = [];
 
     const worker = async () => {
