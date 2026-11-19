@@ -8,7 +8,7 @@ Xəbər səhifələri üçüncü tərəf saytların mətnini tam göstərir. Goo
 
 - `/xeber/*` → `noindex, follow` + öz canonical-ı. Linklər izlənir, səhifə indeksə düşmür.
 - İndekslənən səhifələr: ana səhifə, 12 kateqoriya, mənbə səhifələri, `/menbeler`, statik səhifələr. Bu səhifələrdə mətn Miqyasın özünündür (kateqoriya təsvirləri, mənbə siyahısı, qruplaşdırma).
-- `ARTICLE_INDEXING=self` env dəyəri xəbər səhifələrini indekslənən edir və `news-sitemap.xml`-i açır. Bunu yalnız xəbər səhifəsində orijinal məzmun olanda yandırın (məs. bir neçə mənbəni müqayisə edən öz xülasəmiz, kontekst, timeline).
+- **İstisna — AI xülasəli hadisələr:** ən azı 3 mənbənin yazdığı hadisələr üçün Gemini (pulsuz plan) öz xülasəmizi yazır. Belə hadisənin əsas xəbər səhifəsi indekslənir, `sitemap.xml`-ə və `news-sitemap.xml`-ə düşür. Bu səhifədə kopya mətn yoxdur: öz başlığımız, öz xülasəmiz, mənbədən qısa təsvir və "Tam oxu" linki, bütün mənbələrin siyahısı. Hadisənin digər mənbələrdəki səhifələri `noindex` qalır.
 
 ## 2. Görülən işlər
 
@@ -19,7 +19,7 @@ Xəbər səhifələri üçüncü tərəf saytların mətnini tam göstərir. Goo
 | Robots meta | Private səhifələr (`/hesab*`, `/axtaris`, `/sizin-ucun`, `/tarixce`, `/saxlanilanlar`, admin, icmal təsdiq/çıxış) `noindex, nofollow`; 404 `noindex` | Edildi, yoxlanıb |
 | Real 404 | Mövcud olmayan xəbər/kateqoriya/mənbə/səhifə HTTP 404 qaytarır (əvvəl streaming səbəbindən 200 "soft 404" idi). `htmlLimitedBots` ilə metadata `<head>`-də | Edildi, yoxlanıb |
 | robots.txt | Private yollar bağlı, AI crawler-lər (GPTBot, ClaudeBot, PerplexityBot, Google-Extended) bloklanmır, sitemap göstərilir | Edildi, yoxlanıb |
-| sitemap.xml | Ana səhifə, kateqoriyalar, mənbələr, statik səhifələr; xəbərlər yalnız `ARTICLE_INDEXING=self` olanda | Edildi, XML valid |
+| sitemap.xml | Ana səhifə, kateqoriyalar, mənbələr, statik səhifələr; xəbərlərdən yalnız AI xülasəli hadisələr | Edildi, XML valid |
 | news-sitemap.xml | Son 48 saat, Google News formatı; hazırda 404 (xəbərlər noindex olduğu üçün) | Hazırdır, söndürülüb |
 | RSS | `/rss.xml` və hər kateqoriya üçün `/kateqoriya/{slug}/rss.xml`, `<head>`-də `alternate` | Edildi, XML valid |
 | Structured data | `NewsMediaOrganization`, `WebSite` + `SearchAction`, `CollectionPage` + `ItemList`, `BreadcrumbList`, xəbərdə `NewsArticle` (`isBasedOn` orijinal URL, `sourceOrganization` mənbə) | Edildi, JSON-LD yoxlanıb |
@@ -61,6 +61,6 @@ Azərbaycan xəbər axtarışında üstünlük orijinal xəbər yazan, uzun ill�
 
 1. Deploy: `SITE_URL` build zamanı, Search Console + Bing təsdiqi, sitemap göndərmək.
 2. Real əlaqə e-poçtu və footer şəkilləri.
-3. **Hadisə səhifələri** (`/hadise/{slug}`): bir neçə mənbənin yazdığı hadisə üçün AI ilə hazırlanmış öz xülasə + mənbələrin müqayisəsi + timeline. Bu səhifələr indekslənə bilər — saytın əsas orqanik trafik mənbəyi bu olacaq. Sonra `ARTICLE_INDEXING=self` və Google News müraciəti haqqında yenidən qərar verilir.
+3. **Hadisə səhifələri** (`/hadise/{slug}`): bir neçə mənbənin yazdığı hadisə üçün AI ilə hazırlanmış öz xülasə + mənbələrin müqayisəsi + timeline. Bu səhifələr indekslənə bilər — saytın əsas orqanik trafik mənbəyi bu olacaq. İlk addım edilib: AI xülasəli hadisə səhifələri indekslənir.
 4. Mövzu (topic) səhifələri və onların daxili linklənməsi.
 5. Search Console-da 4–6 həftə sonra indeksləmə hesabatına baxıb kateqoriya təsvirlərini real sorğulara görə yeniləmək.

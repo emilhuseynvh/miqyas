@@ -21,6 +21,7 @@ import { AddRecommendationSignals1794990700000 } from './migrations/179499070000
 import { AddFeedLearning1794990800000 } from './migrations/1794990800000-add-feed-learning.js';
 import { AddNewsletter1794990900000 } from './migrations/1794990900000-add-newsletter.js';
 import { AddStories1794991000000 } from './migrations/1794991000000-add-stories.js';
+import { AddStorySummaries1794991100000 } from './migrations/1794991100000-add-story-summaries.js';
 
 type ConnectionSettings = {
   host: string;
@@ -58,6 +59,7 @@ export const buildTypeOrmOptions = (settings: ConnectionSettings): DataSourceOpt
     AddFeedLearning1794990800000,
     AddNewsletter1794990900000,
     AddStories1794991000000,
+    AddStorySummaries1794991100000,
   ],
   migrationsTableName: 'migrations',
   synchronize: false,

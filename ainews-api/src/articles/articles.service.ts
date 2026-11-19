@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
 import { type Paginated, paginate } from '../common/pagination.js';
 import type { ArticleQueryDto } from './dto/article-query.dto.js';
+import type { SummarizedItem } from './dto/news-item.dto.js';
 import type { NewsQueryDto } from './dto/news-query.dto.js';
 import { Article } from './entities/article.entity.js';
 
@@ -184,6 +185,21 @@ export class ArticlesService {
       .andWhere('source.isActive = true')
       .andWhere('article.title ~ :azLetters', { azLetters: AZ_LETTERS })
       .orderBy('article.publishedAt', 'DESC');
+  }
+
+  findSummarized(sinceHours: number | undefined, limit: number): Promise<SummarizedItem[]> {
+    return this.articles.query(
+      `SELECT a.slug, s.summary_title AS "title", a.published_at AS "publishedAt", s.summarized_at AS "summarizedAt"
+         FROM stories s
+         JOIN articles a ON a.id = s.primary_article_id
+         JOIN sources so ON so.id = a.source_id
+        WHERE s.summarized_at IS NOT NULL
+          AND so.language = $1 AND so.is_active
+          AND ($2::int IS NULL OR a.published_at > now() - make_interval(hours => $2::int))
+        ORDER BY a.published_at DESC
+        LIMIT $3`,
+      [PUBLIC_LANGUAGE, sinceHours ?? null, limit],
+    );
   }
 
   async stats(): Promise<{ total: number; last24h: number; lastHour: number }> {

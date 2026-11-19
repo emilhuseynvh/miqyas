@@ -1,16 +1,12 @@
-import { getNews } from "@/lib/data";
-import { absoluteUrl, articleIndexable, NEWS_SITEMAP_HOURS } from "@/lib/seo";
+import { getSummarized } from "@/lib/data";
+import { absoluteUrl, NEWS_SITEMAP_HOURS } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 const escape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export async function GET() {
-  if (!articleIndexable) return new Response("Not found", { status: 404 });
-  const pages = await Promise.all(
-    Array.from({ length: 10 }, (_, i) => getNews({ page: i + 1, limit: 100, sinceHours: NEWS_SITEMAP_HOURS })),
-  );
-  const urls = pages
-    .flatMap((page) => page.items)
+  const items = await getSummarized(NEWS_SITEMAP_HOURS);
+  const urls = items
     .map(
       (item) => `  <url>
     <loc>${escape(absoluteUrl(`/xeber/${item.slug}`))}</loc>

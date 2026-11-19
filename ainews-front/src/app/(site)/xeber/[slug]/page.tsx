@@ -15,12 +15,14 @@ import { StoryImage } from "@/components/ui/StoryImage";
 import { getNewsDetail } from "@/lib/data";
 import { getArticleState } from "@/lib/engagement";
 import { getCurrentUser } from "@/lib/session";
+import type { NewsArticle } from "@/lib/types";
 import Image from "next/image";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import {
   articleCanonical,
-  articleIndexable,
+  articleHeadline,
+  isArticleIndexable,
   breadcrumbSchema,
   categoryCrumbs,
   type Crumb,
@@ -36,25 +38,26 @@ export async function generateMetadata({ params }: PageProps<"/xeber/[slug]">): 
   if (!detail) notFound();
 
   const { article } = detail;
-  const description = describe(article.summary, article.content);
-  const images = article.imageUrl ? [{ url: article.imageUrl, alt: article.title }] : undefined;
+  const headline = articleHeadline(article);
+  const description = describe(article.story?.summary, article.summary, article.content);
+  const images = article.imageUrl ? [{ url: article.imageUrl, alt: headline }] : undefined;
   return {
-    title: article.title,
+    title: headline,
     description,
     alternates: { canonical: articleCanonical(article) },
-    robots: articleIndexable ? undefined : { index: false, follow: true },
+    robots: isArticleIndexable(article) ? undefined : { index: false, follow: true },
     openGraph: {
       type: "article",
-      title: article.title,
+      title: headline,
       description,
       url: `/xeber/${article.slug}`,
       images,
       publishedTime: article.publishedAt,
-      modifiedTime: article.publishedAt,
+      modifiedTime: article.story?.summarizedAt ?? article.publishedAt,
       section: article.category?.name,
-      authors: [article.author ?? article.source.name],
+      authors: [article.story ? "Miqyas" : (article.author ?? article.source.name)],
     },
-    twitter: { card: images ? "summary_large_image" : "summary", title: article.title, description, images },
+    twitter: { card: images ? "summary_large_image" : "summary", title: headline, description, images },
     other: { "article:source": article.source.name },
   };
 }
@@ -81,12 +84,13 @@ async function ArticleContent({
 
   const { article, related } = detail;
   const [user, state] = await Promise.all([getCurrentUser().catch(() => null), getArticleState(article.id)]);
+  const headline = articleHeadline(article);
   const paragraphs = (article.content ?? article.summary ?? "").split(/\n{2,}/).filter(Boolean);
-  const words = paragraphs.join(" ").split(/\s+/).length;
+  const words = (article.story ? article.story.summary : paragraphs.join(" ")).split(/\s+/).length;
   const readMinutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
   const crumbs: Crumb[] = [
     ...(article.category ? categoryCrumbs(article.category) : [{ name: "Əsas", path: "/" }]),
-    { name: article.title, path: `/xeber/${article.slug}` },
+    { name: headline, path: `/xeber/${article.slug}` },
   ];
 
   return (
@@ -97,7 +101,7 @@ async function ArticleContent({
         <Breadcrumbs items={crumbs} className="mb-4 flex justify-center" />
         {article.category && <CategoryLabel category={article.category} />}
         <h1 className="mt-3 font-serif text-[34px] font-medium leading-[1.06] tracking-[-0.015em] text-balance md:text-[48px]">
-          {article.title}
+          {headline}
         </h1>
         <div className="mt-6">
           <Byline item={article} />
@@ -106,7 +110,7 @@ async function ArticleContent({
 
       {article.imageUrl && (
         <div className="mx-auto mt-8 max-w-[1000px]">
-          <StoryImage src={article.imageUrl} alt={article.title} ratio="wide" eager sizes="(min-width: 1040px) 1000px, 100vw" />
+          <StoryImage src={article.imageUrl} alt={headline} ratio="wide" eager sizes="(min-width: 1040px) 1000px, 100vw" />
         </div>
       )}
 
@@ -115,20 +119,29 @@ async function ArticleContent({
           <p className="-mb-6 font-sans text-xs text-muted">{readMinutes} dəq oxu</p>
           <EngagementBar article={article} state={state} signedIn={Boolean(user)} />
 
-          <StoryBlock title="Xəbər">
-            <ArticleBody paragraphs={paragraphs} />
-            {!article.content && (
-              <p className="mt-4 font-sans text-sm text-muted">Bu xəbərin tam mətnini mənbədən almaq alınmadı.</p>
-            )}
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-sans text-sm font-semibold hover:bg-ink hover:text-paper"
-            >
-              Orijinalı {article.source.name} saytında
-            </a>
-          </StoryBlock>
+          {article.story ? (
+            <>
+              <StoryBlock title="Qısa xülasə" note={`${article.sourceCount} mənbə əsasında`}>
+                <ArticleBody paragraphs={[article.story.summary]} />
+                <p className="mt-4 font-sans text-xs text-muted">
+                  Xülasəni süni intellekt aşağıdakı mənbələrin yazılarına əsasən hazırlayıb. Dəqiq ifadələr üçün orijinal mətnlərə baxın.
+                </p>
+              </StoryBlock>
+              <StoryBlock title={`${article.source.name} yazır`}>
+                <p className="font-serif text-lg italic">{article.title}</p>
+                {article.summary && <p className="mt-3 max-w-[66ch] text-[17px] leading-relaxed text-muted">{article.summary}</p>}
+                <OriginalLink article={article} label="Tam oxu" />
+              </StoryBlock>
+            </>
+          ) : (
+            <StoryBlock title="Xəbər">
+              <ArticleBody paragraphs={paragraphs} />
+              {!article.content && (
+                <p className="mt-4 font-sans text-sm text-muted">Bu xəbərin tam mətnini mənbədən almaq alınmadı.</p>
+              )}
+              <OriginalLink article={article} label="Orijinalı" />
+            </StoryBlock>
+          )}
 
           {article.coverage.length > 1 ? (
             <StoryBlock title={`Bu xəbəri ${article.sourceCount} mənbə yazıb`} note="Dərc vaxtına görə">
@@ -154,5 +167,18 @@ async function ArticleContent({
         </section>
       )}
     </article>
+  );
+}
+
+function OriginalLink({ article, label }: { article: NewsArticle; label: string }) {
+  return (
+    <a
+      href={article.url}
+      target="_blank"
+      rel="noreferrer"
+      className="mt-6 inline-flex items-center gap-2 border border-ink px-4 py-2 font-sans text-sm font-semibold hover:bg-ink hover:text-paper"
+    >
+      {label} {article.source.name} saytında
+    </a>
   );
 }

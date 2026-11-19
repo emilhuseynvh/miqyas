@@ -63,9 +63,25 @@ export type CoverageItem = {
   source: Pick<NewsSource, "name" | "slug">;
 };
 
+export type StorySummary = {
+  title: string;
+  summary: string;
+  summarizedAt: string;
+  primarySlug: string;
+  isPrimary: boolean;
+};
+
+export type SummarizedItem = {
+  slug: string;
+  title: string;
+  publishedAt: string;
+  summarizedAt: string;
+};
+
 export type NewsArticle = NewsItem & {
   content: string | null;
   coverage: CoverageItem[];
+  story: StorySummary | null;
 };
 
 export type NewsDetail = {

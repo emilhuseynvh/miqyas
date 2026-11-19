@@ -5,7 +5,8 @@ import type { Paginated } from '../common/pagination.js';
 import { ContentService } from '../content/content.service.js';
 import { SourcesService } from '../sources/sources.service.js';
 import { ArticlesService } from './articles.service.js';
-import { NewsDetailDto, NewsItemDto } from './dto/news-item.dto.js';
+import { NewsDetailDto, NewsItemDto, type SummarizedItem } from './dto/news-item.dto.js';
+import { SummarizedQueryDto } from './dto/summarized-query.dto.js';
 import { NewsQueryDto } from './dto/news-query.dto.js';
 
 @Public()
@@ -29,6 +30,11 @@ export class NewsController {
     const sourceId = query.source ? (await this.sources.findBySlug(query.source)).id : undefined;
     const page = await this.articles.findPublished(query, { categoryId, sourceId });
     return { ...page, items: page.items.map((item) => NewsItemDto.from(item)) };
+  }
+
+  @Get('summarized')
+  summarized(@Query() query: SummarizedQueryDto): Promise<SummarizedItem[]> {
+    return this.articles.findSummarized(query.hours, query.limit);
   }
 
   @Get(':key')

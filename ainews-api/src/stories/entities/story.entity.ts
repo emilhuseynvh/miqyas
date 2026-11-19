@@ -26,6 +26,21 @@ export class Story {
   @Column({ name: 'last_published_at', type: 'timestamptz' })
   lastPublishedAt: Date;
 
+  @Column({ name: 'summary_title', type: 'varchar', length: 200, nullable: true })
+  summaryTitle: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  summary: string | null;
+
+  @Column({ name: 'summary_model', type: 'varchar', length: 80, nullable: true })
+  summaryModel: string | null;
+
+  @Column({ name: 'summarized_at', type: 'timestamptz', nullable: true })
+  summarizedAt: Date | null;
+
+  @Column({ name: 'summary_attempts', type: 'smallint', default: 0 })
+  summaryAttempts: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

@@ -93,6 +93,22 @@ class EnvironmentVariables {
   @IsString()
   MAIL_FROM: string;
 
+  @IsString()
+  @IsOptional()
+  GEMINI_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  GEMINI_MODEL?: string;
+
+  @IsInt()
+  @Min(0)
+  SUMMARY_DAILY_LIMIT: number = 300;
+
+  @IsInt()
+  @Min(2)
+  SUMMARY_MIN_SOURCES: number = 3;
+
   @Transform(({ value }) => value !== false && value !== 'false')
   @IsBoolean()
   INGESTION_ENABLED: boolean = true;

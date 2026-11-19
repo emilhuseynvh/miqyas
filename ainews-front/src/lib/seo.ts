@@ -1,8 +1,6 @@
 import { site } from "./site";
 import type { Category, NewsArticle, NewsItem, NewsSource } from "./types";
 
-export const ARTICLE_INDEXING: "source" | "self" = process.env.ARTICLE_INDEXING === "self" ? "self" : "source";
-
 export const NEWS_SITEMAP_HOURS = 48;
 const DESCRIPTION_LIMIT = 158;
 
@@ -15,7 +13,9 @@ export function describe(...candidates: (string | null | undefined)[]): string {
   return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
 }
 
-export const articleIndexable = ARTICLE_INDEXING === "self";
+export const isArticleIndexable = (article: Pick<NewsArticle, "story">) => Boolean(article.story?.isPrimary);
+
+export const articleHeadline = (article: Pick<NewsArticle, "story" | "title">) => article.story?.title ?? article.title;
 
 export function articleCanonical(article: Pick<NewsItem, "slug">): string {
   return absoluteUrl(`/xeber/${article.slug}`);
@@ -88,25 +88,38 @@ export function breadcrumbSchema(crumbs: Crumb[]) {
 
 export function newsArticleSchema(article: NewsArticle) {
   const pageUrl = absoluteUrl(`/xeber/${article.slug}`);
-  return {
+  const base = {
     "@type": "NewsArticle",
     "@id": `${pageUrl}#article`,
-    headline: article.title.slice(0, 110),
-    description: describe(article.summary, article.content),
     url: pageUrl,
     mainEntityOfPage: articleCanonical(article),
     datePublished: article.publishedAt,
-    dateModified: article.publishedAt,
     inLanguage: "az",
     image: article.imageUrl ? [article.imageUrl] : undefined,
     articleSection: article.category?.name,
+    publisher: { "@id": organizationId },
+    isAccessibleForFree: true,
+  };
+  if (article.story) {
+    return {
+      ...base,
+      headline: article.story.title.slice(0, 110),
+      description: describe(article.story.summary),
+      dateModified: article.story.summarizedAt,
+      author: { "@id": organizationId },
+      isBasedOn: article.coverage.map((item) => item.url),
+    };
+  }
+  return {
+    ...base,
+    headline: article.title.slice(0, 110),
+    description: describe(article.summary, article.content),
+    dateModified: article.publishedAt,
     author: article.author
       ? { "@type": "Person", name: article.author }
       : { "@type": "Organization", name: article.source.name, url: article.source.siteUrl },
     sourceOrganization: { "@type": "NewsMediaOrganization", name: article.source.name, url: article.source.siteUrl },
     isBasedOn: article.url,
-    publisher: { "@id": organizationId },
-    isAccessibleForFree: true,
   };
 }
 

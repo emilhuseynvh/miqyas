@@ -37,6 +37,13 @@ export const mailConfig = registerAs('mail', () => ({
   from: process.env.MAIL_FROM as string,
 }));
 
+export const summaryConfig = registerAs('summary', () => ({
+  apiKey: process.env.GEMINI_API_KEY,
+  model: process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite',
+  dailyLimit: Number(process.env.SUMMARY_DAILY_LIMIT ?? 300),
+  minSources: Number(process.env.SUMMARY_MIN_SOURCES ?? 3),
+}));
+
 export const ingestionConfig = registerAs('ingestion', () => ({
   enabled: process.env.INGESTION_ENABLED !== 'false',
 }));

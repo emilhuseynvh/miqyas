@@ -52,14 +52,31 @@ export type CoverageItem = {
   source: { name: string; slug: string };
 };
 
+export type StorySummaryDto = {
+  title: string;
+  summary: string;
+  summarizedAt: Date;
+  primarySlug: string;
+  isPrimary: boolean;
+};
+
+export type SummarizedItem = {
+  slug: string;
+  title: string;
+  publishedAt: Date;
+  summarizedAt: Date;
+};
+
 export class NewsDetailDto extends NewsItemDto {
   content: string | null;
   coverage: CoverageItem[];
+  story: StorySummaryDto | null;
 
   static fromDetail(article: Article, coverage: Article[]): NewsDetailDto {
     return {
       ...NewsItemDto.from(article),
       content: article.content,
+      story: storySummary(article, coverage),
       coverage: coverage.map((item) => ({
         id: item.id,
         slug: item.slug,
@@ -70,4 +87,17 @@ export class NewsDetailDto extends NewsItemDto {
       })),
     };
   }
+}
+
+function storySummary(article: Article, coverage: Article[]): StorySummaryDto | null {
+  const story = article.story;
+  if (!story?.summary || !story.summaryTitle || !story.summarizedAt) return null;
+  const primary = coverage.find((item) => item.id === story.primaryArticleId) ?? article;
+  return {
+    title: story.summaryTitle,
+    summary: story.summary,
+    summarizedAt: story.summarizedAt,
+    primarySlug: primary.slug,
+    isPrimary: primary.id === article.id,
+  };
 }

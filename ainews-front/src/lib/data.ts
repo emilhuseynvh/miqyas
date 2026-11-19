@@ -1,7 +1,7 @@
 import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { api, ApiError } from "./api";
-import type { Category, NewsDetail, NewsItem, NewsPage, NewsSource } from "./types";
+import type { Category, NewsDetail, NewsItem, NewsPage, NewsSource, SummarizedItem } from "./types";
 
 export type NewsQuery = {
   category?: string;
@@ -66,6 +66,13 @@ export async function getSources(): Promise<SourceSummary[]> {
 export async function getMostRead(limit = 5): Promise<NewsItem[]> {
   const page = await getNews({ sort: "popular", sinceHours: 24, perSource: 2, limit });
   return page.items;
+}
+
+export async function getSummarized(hours?: number): Promise<SummarizedItem[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("news");
+  return api<SummarizedItem[]>(`/news/summarized?limit=5000${hours ? `&hours=${hours}` : ""}`, { forwardClient: false });
 }
 
 export async function getNewsDetail(slug: string): Promise<NewsDetail | undefined> {
