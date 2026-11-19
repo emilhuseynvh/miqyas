@@ -121,10 +121,10 @@ async function ArticleContent({
 
           {article.story ? (
             <>
-              <StoryBlock title="Qısa xülasə" note={`${article.sourceCount} mənbə əsasında`}>
+              <StoryBlock title="Qısa xülasə" note="Süni intellekt hazırlayıb">
                 <ArticleBody paragraphs={[article.story.summary]} />
                 <p className="mt-4 font-sans text-xs text-muted">
-                  Xülasəni süni intellekt aşağıdakı mənbələrin yazılarına əsasən hazırlayıb. Dəqiq ifadələr üçün orijinal mətnlərə baxın.
+                  Xülasə bu hadisəni yazan mənbələrin mətnlərinə əsasən hazırlanıb. Dəqiq ifadələr üçün orijinal mətnlərə baxın.
                 </p>
               </StoryBlock>
               <StoryBlock title={`${article.source.name} yazır`}>
