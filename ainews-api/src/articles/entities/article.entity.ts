@@ -76,6 +76,9 @@ export class Article {
   @Column({ name: 'clustered_at', type: 'timestamptz', nullable: true, select: false })
   clusteredAt: Date | null;
 
+  @Column({ name: 'is_junk', type: 'boolean', default: false, select: false })
+  isJunk: boolean;
+
   @Column({ name: 'view_count', type: 'integer', default: 0 })
   viewCount: number;
 

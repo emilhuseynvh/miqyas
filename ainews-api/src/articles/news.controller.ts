@@ -7,6 +7,8 @@ import { SourcesService } from '../sources/sources.service.js';
 import { ArticlesService } from './articles.service.js';
 import { NewsDetailDto, NewsItemDto, type SummarizedItem } from './dto/news-item.dto.js';
 import { SummarizedQueryDto } from './dto/summarized-query.dto.js';
+import { TrendingQueryDto } from './dto/trending-query.dto.js';
+import { TrendingService } from '../stories/trending.service.js';
 import { NewsQueryDto } from './dto/news-query.dto.js';
 
 @Public()
@@ -17,6 +19,7 @@ export class NewsController {
     private readonly categories: CategoriesService,
     private readonly content: ContentService,
     private readonly sources: SourcesService,
+    private readonly trendingStories: TrendingService,
   ) {}
 
   @Get()
@@ -30,6 +33,16 @@ export class NewsController {
     const sourceId = query.source ? (await this.sources.findBySlug(query.source)).id : undefined;
     const page = await this.articles.findPublished(query, { categoryId, sourceId });
     return { ...page, items: page.items.map((item) => NewsItemDto.from(item)) };
+  }
+
+  @Get('trending')
+  async trending(@Query() query: TrendingQueryDto): Promise<NewsItemDto[]> {
+    const categoryId = query.category ? (await this.categories.findBySlug(query.category))?.id : undefined;
+    if (query.category && categoryId === undefined) throw new NotFoundException('Category not found');
+    const stories = await this.trendingStories.find({ limit: query.limit, categoryId });
+    const breaking = new Set(stories.filter((story) => story.breaking).map((story) => story.articleId));
+    const articles = await this.articles.findPublishedByIds(stories.map((story) => story.articleId));
+    return articles.map((article) => NewsItemDto.from(article, breaking.has(article.id)));
   }
 
   @Get('summarized')

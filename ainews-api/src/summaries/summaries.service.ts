@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { DataSource } from 'typeorm';
-import { PUBLIC_LANGUAGE } from '../articles/articles.service.js';
 import { summaryConfig } from '../config/configuration.js';
+import { TrendingService } from '../stories/trending.service.js';
 import { GeminiClient, GeminiRateLimitError } from './gemini.client.js';
 import {
   buildPrompt,
@@ -15,7 +15,6 @@ import {
 } from './summary.prompt.js';
 
 const MAX_ATTEMPTS = 3;
-const CANDIDATE_WINDOW_HOURS = 24;
 const RATE_LIMIT_PAUSE_MS = 30 * 60 * 1000;
 const QUOTA_TIME_ZONE = 'America/Los_Angeles';
 
@@ -28,6 +27,7 @@ export class SummariesService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly gemini: GeminiClient,
+    private readonly trending: TrendingService,
     @Inject(summaryConfig.KEY) private readonly config: ConfigType<typeof summaryConfig>,
   ) {}
 
@@ -98,20 +98,8 @@ export class SummariesService {
 
   private async candidates(limit: number): Promise<string[]> {
     if (limit <= 0) return [];
-    const rows: { id: string }[] = await this.dataSource.query(
-      `SELECT s.id FROM stories s
-         JOIN articles a ON a.id = s.primary_article_id
-         JOIN sources so ON so.id = a.source_id
-        WHERE s.summary IS NULL
-          AND s.summary_attempts < $1
-          AND s.source_count >= $2
-          AND s.last_published_at > now() - make_interval(hours => $3)
-          AND so.language = $4 AND so.is_active
-        ORDER BY s.source_count DESC, s.first_published_at DESC
-        LIMIT $5`,
-      [MAX_ATTEMPTS, this.config.minSources, CANDIDATE_WINDOW_HOURS, PUBLIC_LANGUAGE, limit],
-    );
-    return rows.map((row) => row.id);
+    const stories = await this.trending.find({ limit, unsummarizedOnly: true, diverse: false });
+    return stories.map((story) => story.storyId);
   }
 
   private sourceTexts(storyId: string): Promise<SourceText[]> {

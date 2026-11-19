@@ -13,10 +13,11 @@ export class NewsItemDto {
   likeCount: number;
   dislikeCount: number;
   sourceCount: number;
+  breaking: boolean;
   source: { id: string; name: string; slug: string; siteUrl: string };
   category: { slug: string; name: string } | null;
 
-  static from(article: Article): NewsItemDto {
+  static from(article: Article, breaking = false): NewsItemDto {
     return {
       id: article.id,
       slug: article.slug,
@@ -30,6 +31,7 @@ export class NewsItemDto {
       likeCount: article.likeCount,
       dislikeCount: article.dislikeCount,
       sourceCount: article.story?.sourceCount ?? 1,
+      breaking,
       source: {
         id: article.source.id,
         name: article.source.name,

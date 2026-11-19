@@ -21,6 +21,7 @@ ${categories.map((c) => `- [${c.name}](${absoluteUrl(`/kateqoriya/${c.slug}`)}):
 
 - [Son xəbərlər](${absoluteUrl("/")})
 - [Gündəlik icmal](${absoluteUrl("/icmal")}): son 24 saatın ən çox oxunan xəbərləri
+- [Son xəbərlər](${absoluteUrl("/son-xeberler")}): bütün mənbələrdən xəbərlər vaxt sırası ilə
 - [Mənbələr](${absoluteUrl("/menbeler")}): izlənilən bütün xəbər saytları
 - [Mənbə siyasəti](${absoluteUrl("/menbe-siyaseti")})
 - [Haqqımızda](${absoluteUrl("/haqqimizda")})

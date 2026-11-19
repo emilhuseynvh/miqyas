@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getCategories, getNews, getSources, getSummarized } from "@/lib/data";
 import { absoluteUrl } from "@/lib/seo";
 
-const STATIC_PAGES = ["/icmal", "/menbeler", "/haqqimizda", "/menbe-siyaseti", "/mexfilik", "/elaqe"];
+const STATIC_PAGES = ["/son-xeberler", "/icmal", "/menbeler", "/haqqimizda", "/menbe-siyaseti", "/mexfilik", "/elaqe"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [categories, sources, latest, summarized] = await Promise.all([

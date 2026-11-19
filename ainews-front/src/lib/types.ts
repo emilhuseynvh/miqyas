@@ -25,6 +25,7 @@ export type NewsItem = {
   likeCount: number;
   dislikeCount: number;
   sourceCount: number;
+  breaking: boolean;
   source: NewsSource;
   category: Pick<Category, "slug" | "name"> | null;
 };

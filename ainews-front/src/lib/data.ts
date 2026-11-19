@@ -87,6 +87,14 @@ export async function getNewsDetail(slug: string): Promise<NewsDetail | undefine
   }
 }
 
+export async function getTrending(limit: number, category?: string): Promise<NewsItem[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("news");
+  const query = new URLSearchParams({ limit: String(limit), ...(category ? { category } : {}) });
+  return api<NewsItem[]>(`/news/trending?${query}`, { forwardClient: false });
+}
+
 export type HomeFeed = {
   lead: NewsItem | undefined;
   belowLead: NewsItem[];
@@ -95,21 +103,31 @@ export type HomeFeed = {
   latest: NewsItem[];
 };
 
+const ILLUSTRATED_SLOTS = 7;
+const GLANCE_SLOTS = 6;
+const LATEST_SLOTS = 8;
+
 export async function getHomeFeed(): Promise<HomeFeed> {
-  const [illustrated, latest] = await Promise.all([
+  const [trending, illustrated, latest] = await Promise.all([
+    getTrending(30),
     getNews({ withImage: true, perSource: 1, limit: 12 }),
-    getNews({ perSource: 1, limit: 20 }),
+    getNews({ perSource: 1, limit: 30 }),
   ]);
-  const [lead, ...rest] = illustrated.items;
-  const side = rest.slice(0, 2);
-  const belowLead = rest.slice(2, 6);
-  const used = new Set([lead, ...side, ...belowLead].filter((item) => item !== undefined).map((item) => item.id));
-  const remaining = latest.items.filter((item) => !used.has(item.id));
+  const pictured = unique([...trending.filter((item) => item.imageUrl), ...illustrated.items]).slice(0, ILLUSTRATED_SLOTS);
+  const [lead, ...rest] = pictured;
+  const used = new Set(pictured.map((item) => item.id));
+  const glance = unique([...trending, ...latest.items]).filter((item) => !used.has(item.id)).slice(0, GLANCE_SLOTS);
+  for (const item of glance) used.add(item.id);
   return {
     lead,
-    belowLead,
-    side,
-    glance: remaining.slice(0, 5),
-    latest: remaining.slice(5, 11),
+    side: rest.slice(0, 2),
+    belowLead: rest.slice(2, 6),
+    glance,
+    latest: latest.items.filter((item) => !used.has(item.id)).slice(0, LATEST_SLOTS),
   };
+}
+
+function unique(items: NewsItem[]): NewsItem[] {
+  const seen = new Set<string>();
+  return items.filter((item) => !seen.has(item.id) && Boolean(seen.add(item.id)));
 }

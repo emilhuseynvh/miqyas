@@ -105,10 +105,6 @@ class EnvironmentVariables {
   @Min(0)
   SUMMARY_DAILY_LIMIT: number = 300;
 
-  @IsInt()
-  @Min(2)
-  SUMMARY_MIN_SOURCES: number = 3;
-
   @Transform(({ value }) => value !== false && value !== 'false')
   @IsBoolean()
   INGESTION_ENABLED: boolean = true;

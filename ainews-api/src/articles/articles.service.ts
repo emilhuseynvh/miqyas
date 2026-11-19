@@ -11,6 +11,8 @@ export const PUBLIC_LANGUAGE = 'az';
 export const PRIMARY_ONLY = (a: string) =>
   `(${a}.story_id IS NULL OR EXISTS (SELECT 1 FROM stories st WHERE st.id = ${a}.story_id AND st.primary_article_id = ${a}.id))`;
 
+export const LISTABLE = (a: string) => `NOT ${a}.is_junk AND ${PRIMARY_ONLY(a)}`;
+
 export type NewsFilterIds = { categoryId?: number; sourceId?: string };
 
 const RELATED_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
@@ -30,6 +32,7 @@ export type NewArticle = Pick<
   | 'feedCategories'
   | 'publishedAt'
   | 'titleKey'
+  | 'isJunk'
 > &
   Partial<Pick<Article, 'content' | 'contentExtractedAt'>>;
 
@@ -78,7 +81,7 @@ export class ArticlesService {
 
   async findPublished(query: NewsQueryDto, ids: NewsFilterIds = {}): Promise<Paginated<Article>> {
     const params: Record<string, unknown> = {};
-    const conditions: ((a: string, s: string) => string)[] = [PRIMARY_ONLY];
+    const conditions: ((a: string, s: string) => string)[] = [LISTABLE];
 
     if (ids.categoryId !== undefined) {
       conditions.push((a) => `${a}.category_id = :categoryId`);
@@ -154,7 +157,7 @@ export class ArticlesService {
     const qb = this.publicQuery()
       .andWhere('article.id != :id', { id: article.id })
       .andWhere('article.sourceId != :sourceId', { sourceId: article.sourceId })
-      .andWhere(PRIMARY_ONLY('article'))
+      .andWhere(LISTABLE('article'))
       .andWhere('article.publishedAt > :since', {
         since: new Date(Date.now() - RELATED_WINDOW_MS),
       })

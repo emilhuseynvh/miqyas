@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CategoryLabel } from "@/components/ui/CategoryLabel";
 import { StoryImage } from "@/components/ui/StoryImage";
 import type { NewsItem } from "@/lib/types";
+import { Kicker } from "./Kicker";
 import { SourceMeta } from "./SourceMeta";
 
 type Variant = "lead" | "feature" | "split" | "grid" | "compact" | "text";
@@ -39,7 +39,7 @@ export function StoryCard({ item, variant = "grid", showCategory = true, eager }
   if (variant === "lead") {
     return (
       <article className="flex flex-col items-center text-center">
-        {category && <CategoryLabel category={category} className="mb-3" />}
+        <Kicker item={item} category={category} className="mb-3 justify-center" />
         {title}
         {item.summary && <p className="mt-4 line-clamp-3 max-w-[52ch] text-lg leading-snug text-muted">{item.summary}</p>}
         <SourceMeta item={item} className="mt-3" />
@@ -57,7 +57,7 @@ export function StoryCard({ item, variant = "grid", showCategory = true, eager }
           {image("classic", "(min-width: 768px) 480px, 100vw")}
         </Link>
         <div>
-          {category && <CategoryLabel category={category} className="mb-2 inline-block" />}
+          <Kicker item={item} category={category} className="mb-2" />
           {title}
           {item.summary && <p className="mt-3 line-clamp-4 text-[17px] leading-snug text-muted">{item.summary}</p>}
           <SourceMeta item={item} className="mt-3" />
@@ -70,7 +70,7 @@ export function StoryCard({ item, variant = "grid", showCategory = true, eager }
     return (
       <article className="grid grid-cols-[1fr_96px] gap-4">
         <div>
-          {category && <CategoryLabel category={category} className="mb-1 inline-block" />}
+          <Kicker item={item} category={category} className="mb-1" />
           {title}
           <SourceMeta item={item} className="mt-1.5" />
         </div>
@@ -88,7 +88,7 @@ export function StoryCard({ item, variant = "grid", showCategory = true, eager }
           {image("classic", "(min-width: 1024px) 300px, 50vw")}
         </Link>
       )}
-      {category && <CategoryLabel category={category} className="mb-1" />}
+      <Kicker item={item} category={category} className="mb-1" />
       {title}
       {variant !== "grid" && item.summary && (
         <p className="mt-2 line-clamp-3 text-[16px] leading-snug text-muted">{item.summary}</p>

@@ -4,6 +4,7 @@ import { CategoriesService } from '../categories/categories.service.js';
 import { detectCategorySlug } from '../categories/category-detector.js';
 import { mapWithConcurrency } from '../common/concurrency.js';
 import { articleSlug } from '../common/slug.js';
+import { isJunkTitle } from '../common/junk.js';
 import { titleKey } from '../common/title-key.js';
 import { ArticleExtractorService } from '../content/article-extractor.service.js';
 import type { Source } from '../sources/entities/source.entity.js';
@@ -129,6 +130,7 @@ export class IngestionService {
       title: entry.title,
       slug: articleSlug(entry.title, entry.url),
       titleKey: titleKey(entry.title),
+      isJunk: isJunkTitle(entry.title),
       url: entry.url,
       summary: entry.summary,
       imageUrl: entry.imageUrl,

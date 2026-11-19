@@ -16,6 +16,11 @@ export async function NavBar() {
             Sizin üçün
           </Link>
         </li>
+        <li>
+          <Link href="/son-xeberler" className="whitespace-nowrap font-semibold hover:underline">
+            Son xəbərlər
+          </Link>
+        </li>
         {categories.map((c) => (
           <li key={c.slug}>
             <Link href={`/kateqoriya/${c.slug}`} className="whitespace-nowrap hover:underline">

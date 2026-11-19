@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import {
   ArticlesService,
   AZ_LETTERS,
-  PRIMARY_ONLY,
+  LISTABLE,
   PUBLIC_LANGUAGE,
 } from '../articles/articles.service.js';
 import { NewsItemDto } from '../articles/dto/news-item.dto.js';
@@ -159,7 +159,7 @@ export class FeedService {
          AND a.title ~ $2
          AND a.image_url IS NOT NULL
          AND a.published_at > now() - make_interval(hours => $3)
-         AND ${PRIMARY_ONLY('a')}
+         AND ${LISTABLE('a')}
          ${exclusion}
        ORDER BY a.published_at DESC
        LIMIT $4
