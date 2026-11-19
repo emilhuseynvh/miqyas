@@ -8,6 +8,7 @@ import { site } from "@/lib/site";
 const primaryLinks = [
   { href: "/icmal", label: "Gündəlik icmal" },
   { href: "/axtaris", label: "Axtarış" },
+  { href: site.telegramUrl, label: "Telegram kanalı" },
 ];
 
 const briefings = [
