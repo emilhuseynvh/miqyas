@@ -21,6 +21,7 @@ const briefings = [
 const companyLinks = [
   { href: "/menbeler", label: "Mənbələr" },
   { href: "/haqqimizda", label: "Haqqımızda" },
+  { href: "/reklam", label: "Reklam" },
   { href: "/menbe-siyaseti", label: "Mənbə siyasəti" },
   { href: "/elaqe", label: "Əlaqə" },
 ];

@@ -1,3 +1,4 @@
+import { AdSlot } from "@/components/ads/AdSlot";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -94,6 +95,7 @@ async function CategoryContent({
 
       {first ? (
         <>
+          <AdSlot className="mt-12" />
           {trending.length > 0 && (
             <div className="mt-12">
               <SectionHeading title="Bütün xəbərlər" />

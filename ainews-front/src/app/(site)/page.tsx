@@ -1,4 +1,5 @@
-import { Suspense } from "react";
+import { AdSlot } from "@/components/ads/AdSlot";
+import { Fragment, Suspense } from "react";
 import { ForYouStrip } from "@/components/feed/ForYouStrip";
 import { CategorySection } from "@/components/home/CategorySection";
 import { LatestList } from "@/components/home/LatestList";
@@ -85,15 +86,21 @@ export default async function HomePage() {
             </div>
           ))}
           <MostRead items={mostRead} />
+          <AdSlot variant="box" />
         </aside>
       </div>
+
+      <AdSlot className="mt-14" />
 
       <Suspense fallback={null}>
         <ForYouStrip />
       </Suspense>
 
-      {sections.map(({ category, items }) => (
-        <CategorySection key={category.slug} category={category} items={items} />
+      {sections.map(({ category, items }, i) => (
+        <Fragment key={category.slug}>
+          <CategorySection category={category} items={items} />
+          {i === 1 && <AdSlot className="mt-14" />}
+        </Fragment>
       ))}
 
       <NewsletterBlock />

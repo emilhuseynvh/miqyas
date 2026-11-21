@@ -25,6 +25,54 @@
 
   --font-serif: var(--font-source-serif), "Times New Roman", serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --animate-ad-march: ad-march 1.4s linear infinite;
+  --animate-ad-ruler: ad-ruler 5s linear infinite;
+  --animate-ad-sweep: ad-sweep 7s ease-in-out infinite alternate;
+  --animate-ad-words: ad-words 10s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+
+  @keyframes ad-march {
+    to {
+      stroke-dashoffset: -28;
+    }
+  }
+
+  @keyframes ad-ruler {
+    to {
+      background-position-x: -100px;
+    }
+  }
+
+  @keyframes ad-sweep {
+    from {
+      left: 2%;
+    }
+    to {
+      left: calc(98% - 12px);
+    }
+  }
+
+  @keyframes ad-words {
+    0%,
+    20% {
+      transform: translateY(0);
+    }
+    25%,
+    45% {
+      transform: translateY(-1.15em);
+    }
+    50%,
+    70% {
+      transform: translateY(-2.3em);
+    }
+    75%,
+    95% {
+      transform: translateY(-3.45em);
+    }
+    100% {
+      transform: translateY(-4.6em);
+    }
+  }
 }
 
 @layer base {
