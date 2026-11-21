@@ -21,12 +21,11 @@ export function TopAd() {
   );
 }
 
-export function RailAd({ side }: { side: "left" | "right" }) {
-  const position = side === "left" ? "left-[calc(50%-816px)]" : "right-[calc(50%-816px)]";
+export function RailAd() {
   return (
-    <div className={`fixed top-1/2 z-10 hidden w-[176px] -translate-y-1/2 min-[1680px]:block ${position}`}>
-      <AdFrame className="flex h-[600px] flex-col justify-between py-10 pl-6 pr-3" labelClass="left-6">
-        <p className="font-serif text-[20px] font-semibold leading-[1.25] tracking-tight [&_.word]:px-1">
+    <div className="hidden w-[160px] shrink-0 pt-4 min-[1440px]:block">
+      <AdFrame className="sticky top-4 flex h-[600px] flex-col justify-between py-10 pl-6 pr-3" labelClass="left-6">
+        <p className="font-serif text-[18px] font-semibold leading-[1.25] tracking-tight [&_.word]:px-1">
           Burada sizin
           <br />
           <RotatingWord />
