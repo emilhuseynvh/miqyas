@@ -1,4 +1,3 @@
-import { AdSlot } from "@/components/ads/AdSlot";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -155,10 +154,6 @@ async function ArticleContent({
           )}
         </div>
 
-      </div>
-
-      <div className="mx-auto mt-14 max-w-[760px]">
-        <AdSlot />
       </div>
 
       {related.length > 0 && (

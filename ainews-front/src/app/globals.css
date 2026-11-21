@@ -29,6 +29,8 @@
   --animate-ad-march: ad-march 1.4s linear infinite;
   --animate-ad-ruler: ad-ruler 5s linear infinite;
   --animate-ad-sweep: ad-sweep 7s ease-in-out infinite alternate;
+  --animate-ad-ruler-y: ad-ruler-y 5s linear infinite;
+  --animate-ad-sweep-y: ad-sweep-y 9s ease-in-out infinite alternate;
   --animate-ad-words: ad-words 10s cubic-bezier(0.7, 0, 0.3, 1) infinite;
 
   @keyframes ad-march {
@@ -49,6 +51,21 @@
     }
     to {
       left: calc(98% - 12px);
+    }
+  }
+
+  @keyframes ad-ruler-y {
+    to {
+      background-position-y: -100px;
+    }
+  }
+
+  @keyframes ad-sweep-y {
+    from {
+      top: 2%;
+    }
+    to {
+      top: calc(98% - 12px);
     }
   }
 

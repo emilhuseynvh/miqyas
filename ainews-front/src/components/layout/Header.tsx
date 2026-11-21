@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { AccountLink, SignInLink } from "./AccountLink";
 import { NavBar } from "./NavBar";
+import { TopAd } from "@/components/ads/HouseAds";
 import { Today } from "./Today";
 import { Wordmark } from "./Wordmark";
 import { ClockRow, WorldClocks } from "./WorldClocks";
@@ -53,6 +54,7 @@ export function Header() {
         </div>
       </div>
 
+      <TopAd />
       <NavBar />
 
       <Link

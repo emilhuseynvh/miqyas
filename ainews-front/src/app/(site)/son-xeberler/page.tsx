@@ -1,4 +1,3 @@
-import { AdSlot } from "@/components/ads/AdSlot";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -61,9 +60,7 @@ async function LatestContent({ searchParams }: { searchParams: Promise<Record<st
       </header>
       {news.items.length > 0 ? (
         <div className="mt-2">
-          <TimelineList items={news.items.slice(0, 15)} size="md" />
-          <AdSlot className="my-6" />
-          <TimelineList items={news.items.slice(15)} size="md" />
+          <TimelineList items={news.items} size="md" />
         </div>
       ) : (
         <p className="mt-10 text-lg text-muted">Hələ xəbər yoxdur. Bir neçə dəqiqədən sonra yenidən baxın.</p>
