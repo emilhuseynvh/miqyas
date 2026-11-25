@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageOpenGraph } from "@/lib/seo";
 import { StaticPage } from "@/components/ui/StaticPage";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Məxfilik",
@@ -45,6 +46,24 @@ export default function PrivacyPage() {
         <a href="https://privacy.microsoft.com/privacystatement">Microsoft məxfilik bəyanatı</a>.
       </p>
 
+      {site.adsenseClient && (
+        <>
+          <h2 id="reklam">Reklamlar</h2>
+          <p>
+            Saytda Google AdSense reklamları göstərilə bilər. Google daxil olmaqla üçüncü tərəf reklam təchizatçıları sizin bu
+            və digər saytlara əvvəlki baxışlarınıza əsasən reklam göstərmək üçün cookie-lərdən istifadə edir. Google-un reklam
+            cookie-ləri ona və tərəfdaşlarına bu sayta və internetdəki digər saytlara baxışlarınıza əsasən reklam göstərməyə
+            imkan verir.
+          </p>
+          <p>
+            Fərdiləşdirilmiş reklamlardan <a href="https://adssettings.google.com">Google reklam ayarları</a> səhifəsində,
+            digər təchizatçıların cookie-lərindən isə <a href="https://www.aboutads.info/choices">aboutads.info</a> səhifəsində
+            imtina edə bilərsiniz. Ətraflı:{" "}
+            <a href="https://policies.google.com/technologies/ads">Google reklam texnologiyaları</a>.
+          </p>
+        </>
+      )}
+
       <h2>Məlumatlarınızı idarə etmək</h2>
       <ul>
         <li>Oxu tarixçənizi &quot;Oxuduqlarım&quot; səhifəsindən istənilən vaxt silə bilərsiniz.</li>
@@ -68,7 +87,12 @@ export default function PrivacyPage() {
           <code>_clsk</code>: bir sessiya ərzindəki baxışları birləşdirmək üçün (1 gün).
         </li>
       </ul>
-      <p>Reklam cookie-ləri istifadə olunmur. Statistika cookie-lərini brauzerinizin ayarlarından silə və ya bloklaya bilərsiniz.</p>
+      {site.adsenseClient ? (
+        <p>Reklam cookie-ləri Google AdSense tərəfindən yerləşdirilir, ətraflı yuxarıdakı &quot;Reklamlar&quot; bölməsindədir.</p>
+      ) : (
+        <p>Reklam cookie-ləri istifadə olunmur.</p>
+      )}
+      <p>Statistika cookie-lərini brauzerinizin ayarlarından silə və ya bloklaya bilərsiniz.</p>
     </StaticPage>
   );
 }

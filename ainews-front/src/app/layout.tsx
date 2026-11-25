@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
     other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
   },
+  other: site.adsenseClient ? { "google-adsense-account": site.adsenseClient } : undefined,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
